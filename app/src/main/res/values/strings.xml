@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name" translatable="false">StoryApp</string>
+    <string name="title_welcome_page">Welcome to dStory!</string>
+    <string name="message_welcome_page">An application that displays a list of stories from students and graduates Dicoding Academy!</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="copyright" translatable="false">© 2022 Alicea</string>
+    <string name="logout">Logout</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">You need to login first</string>
+    <string name="title_login_page">Ready to share your own story?</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="title_signup_page">Fill in your details below to register</string>
+    <string name="name">Name</string>
+    <string name="email_empty_error">Type your Email</string>
+    <string name="name_empty_error">Type your Name</string>
+    <string name="password_empty_error">Type your Password</string>
+    <string name="signup_message_popup">Account has been created! Start login to add your own story.</string>
+    <string name="next_button_popup">Next</string>
+    <string name="title_popup" translatable="false">Yeah!</string>
+    <string name="wrong_email_password">Wrong email or password</string>
+    <string name="login_message">Login success!</string>
+    <string name="password_length_error">Min. 6 characters</string>
+    <string name="email_format_error">Wrong format Email</string>
+    <string name="on_failure_message">Failed to get response</string>
+    <string name="email_taken_error">Email is already taken</string>
+    <string name="user_not_found">User not found</string>
+    <string name="user_name">User name</string>
+    <string name="not_found">Not Found</string>
+    <string name="fetched_success">Stories fetched successfully</string>
+    <string name="language">Language</string>
+    <string name="list_stories">List Stories</string>
+    <string name="detail_story">Detail Story</string>
+    <string name="permission_denied">Access Denied</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="write_description">Write description</string>
+    <string name="failed_to_take_a_pic">Failed to take a picture</string>
+    <string name="success_taking_picture">Successfully taking a picture</string>
+    <string name="fail_to_show_camera">Failed to show camera.</string>
+    <string name="choose_a_pic">Choose a Picture</string>
+    <string name="story_created">Story created successfully</string>
+    <string name="fail_to_img">Failed to read an image</string>
+    <string name="input_image_file_first">Please input your image file first</string>
+    <string name="write_desc_first">Write description first</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">Stories Stacked Widget</string>
+    <string name="appwidget_text" translatable="false">STORIES BANNER</string>
+    <string name="empty_text">NO DATA</string>
+    <string name="image_preview">Preview Image</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="switch_camera">Switch Camera</string>
+    <string name="story_photo_in_detail">Story photo in detail</string>
+    <string name="image_logo_story">Story Logo Image</string>
+    <string name="add_story_button">Add Story Button</string>
+    <string name="story_photo_item_in_list">Story photo item in list</string>
+
+</resources>
