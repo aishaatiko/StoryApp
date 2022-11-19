@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.add.AddStoryActivity">
+    tools:context=".ui.add.AddStoryActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -54,7 +54,9 @@
                 android:gravity="left"
                 android:padding="8dp"
                 tools:text="@string/write_description"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"
+                android:inputType="text"
+                android:autofillHints="" />
 
             <com.alicea.storyappsubmission.customview.ButtonAdd
                 android:id="@+id/button_add"
