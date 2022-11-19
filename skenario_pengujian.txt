@@ -1,0 +1,113 @@
+1. Skenario (androidTest) data.local.room.StoryDaoTest
+
+a. Ketika menyimpan data berhasil:
+- data yg tersimpan tidak kosong, jumlah dan data sesuai dengan data ketika getAllStoryLocation.
+b. Ketika menghapus data berhasil:
+- data getAllStoryLocation kosong.
+
+
+2. Skenario (androidTest) data.StoryRemoteMediatorTest
+
+Ketika data selanjutnya ada:
+- Memastikan fungsi load mengembalikan RemoteMediator.MediatorResult.Success.
+- Memastikan jumlah endOfPaginationReached bernilai false.
+
+3. Skenario (androidTest) data.StoryRepository
+
+a. Ketika mengambil data story dari internet:
+- Memastikan data tidak null.
+- Memastikan jumlah data sesuai dengan yang diharapkan.
+
+b. Ketika proses registrasi dijalankan:
+- Memastikan respon data tidak null
+- Memastikan Result.Success setelah pemanggilan API
+- Memastikan pesan respon sesuai dengan yang diharapkan
+
+c. Ketika proses login dijalankan:
+- Memastikan respon data tidak null
+- Memastikan Result.Success setelah pemanggilan API
+- Memastikan pesan respon sesuai dengan yang diharapkan
+
+d. Ketika proses upload gambar dijalankan:
+- Memastikan respon data tidak null
+- Memastikan Result.Success setelah pemanggilan API
+- Memastikan pesan respon sesuai dengan yang diharapkan
+
+4. Skenario (test) ui.add.AddViewModelTest
+
+a. Ketika melakukan upload gambar: 
+- Memastikan respon data tidak null
+- Memastikan Result dari respon sesuai yang diharapkan
+
+b. when Get Token Should return token:
+- Memastikan metode mengembalikan nilai token yang sesuai dalam penyimpanan data store
+
+5. Skenario (test) ui.login.LoginViewModelTest 
+
+a. Ketika melakukan login pengguna: 
+- Memastikan respon data tidak null
+- Memastikan Result dari respon sesuai yang diharapkan
+
+6. Skenario (test) ui.main.MainViewModelTest
+
+a. Ketika berhasil memuat data cerita:
+- Memastikan data tidak null.
+- Memastikan jumlah data sesuai dengan yang diharapkan.
+
+b. when Get Token Should return token:
+- Memastikan metode mengembalikan nilai token yang sesuai dalam penyimpanan data store
+
+7. Skenario (test) ui.map.MapsViewModelTest
+
+a. Ketika berhasil memuat data cerita:
+- Memastikan mengembalikan Result.Success.
+- Memastikan data tidak null.
+- Memastikan jumlah data sesuai dengan yang diharapkan.
+
+b. when Get Token Should return token:
+- Memastikan metode mengembalikan nilai token yang sesuai dalam penyimpanan data store
+
+8. Skenario (test) ui.signup.SignupViewModelTest
+
+a. Ketika melakukan register pengguna: 
+- Memastikan respon data tidak null
+- Memastikan Result dari respon sesuai yang diharapkan
+
+9. Skenario (test) utils.DateFormatterTest
+
+a. given correct ISO 8601 format then should format correctly
+- Input : Menerima format dari API sesuai ISO 8601 dalam bentuk String. Contohnya 2022-01-24T01:57:36Z
+- Output : Format baru dalam bentuk String sesuai dengan TimeZone. Contohnya 24 Jan 2022 | 08:57
+
+b. given wrong ISO 8601 format then should throw error
+- Input : Menerima format data tanggal yang tidak sesuai bertipe string
+- Output : Akan menampilkan error karena format tidak sesuai standar
+
+c. given invalid timezone then should throw error
+- Input : Menerima format data timezone yang tidak sesuai bertipe string
+- Output : Akan menampilkan error karena data timezone tidak valid
+
+10. Skenario (test) utils.EmailValidatorTest
+
+a. given correct Email format then should return true
+- Input : Menerima email dengan format yang valid bertipe string
+- Output : Akan mengembalikan nilai true karena format valid
+
+b. given wrong Email format then should return false
+
+- Input : Menerima email dengan format yang tidak valid bertipe string
+- Output : Akan mengembalikan nilai false karena format tidak valid
+
+11. Skenario (test) utils.MapsUtilTest
+
+a. given correct Latitude and Longitude range then should return true
+
+- Input : Menerima data latitude dan longitude bertipe double dalam range yang valid
+- Output : Akan mengembalikan nilai true karena latitude dan longitude masih dalam range yang valid
+
+b. given wrong Latitude or Longitude format then should return false
+
+- Input : Menerima data bertipe double latitude dan data longitude di luar range, menerima data latitude dalam range namun longitude tidak, 
+menerima data latitude di luar range dan longitude dalam range, 
+menerima data latitude dan longitude yang tertukar
+- Output : Akan mengembalikan nilai false karena nilai dari salah satu atau kedua dari latitude dan longitude di luar range
