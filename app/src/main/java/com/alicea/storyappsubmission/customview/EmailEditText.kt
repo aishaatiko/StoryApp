@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.widget.addTextChangedListener
-import com.alicea.storyappsubmission.isValidEmail
+import com.alicea.storyappsubmission.utils.EmailValidator.isValidEmail
 import com.google.android.material.textfield.TextInputEditText
 
 class EmailEditText: TextInputEditText {
