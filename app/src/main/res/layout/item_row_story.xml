@@ -32,12 +32,24 @@
 
             <TextView
                 android:id="@+id/tv_item_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="User name" />
+            <TextView
+                android:id="@+id/tv_item_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:textAlignment="center"
+                tools:text="Time" />
+
         </LinearLayout>
 
         <ImageView
