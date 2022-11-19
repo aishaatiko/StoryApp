@@ -5,6 +5,8 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -12,7 +14,6 @@
         android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
@@ -24,26 +25,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StoryAppSubmission"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDdvaYL7v1P3klHwsITqP-YAT9wHM79LLA" />
+
         <activity
-            android:name=".view.camera.CameraActivity"
+            android:name=".ui.map.MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".ui.camera.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".view.add.AddStoryActivity"
+            android:name=".ui.add.AddStoryActivity"
             android:exported="false" />
         <activity
-            android:name=".view.detail.DetailStoryActivity"
+            android:name=".ui.detail.DetailStoryActivity"
             android:exported="false" />
         <activity
-            android:name=".view.signup.SignupActivity"
+            android:name=".ui.signup.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".view.login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".view.welcome.WelcomeActivity"
+            android:name=".ui.welcome.WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
