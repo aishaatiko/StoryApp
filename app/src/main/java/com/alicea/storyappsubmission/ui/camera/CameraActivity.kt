@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.view.camera
+package com.alicea.storyappsubmission.ui.camera
 
 import android.content.Intent
 import android.os.Build
@@ -14,9 +14,9 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.alicea.storyappsubmission.R
-import com.alicea.storyappsubmission.createFile
 import com.alicea.storyappsubmission.databinding.ActivityCameraBinding
-import com.alicea.storyappsubmission.view.add.AddStoryActivity
+import com.alicea.storyappsubmission.ui.add.AddStoryActivity
+import com.alicea.storyappsubmission.utils.FileUtil.createFile
 
 
 class CameraActivity : AppCompatActivity() {
