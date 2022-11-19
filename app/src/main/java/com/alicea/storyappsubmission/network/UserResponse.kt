@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.networking
+package com.alicea.storyappsubmission.network
 
 import com.google.gson.annotations.SerializedName
 

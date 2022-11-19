@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.model
+package com.alicea.storyappsubmission.preference
 
 data class SessionUserModel(
     val token: String,
