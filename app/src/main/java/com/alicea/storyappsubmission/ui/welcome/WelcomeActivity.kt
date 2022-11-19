@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.view.welcome
+package com.alicea.storyappsubmission.ui.welcome
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.alicea.storyappsubmission.databinding.ActivityWelcomeBinding
-import com.alicea.storyappsubmission.view.login.LoginActivity
-import com.alicea.storyappsubmission.view.signup.SignupActivity
+import com.alicea.storyappsubmission.ui.login.LoginActivity
+import com.alicea.storyappsubmission.ui.signup.SignupActivity
 
 class WelcomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWelcomeBinding
