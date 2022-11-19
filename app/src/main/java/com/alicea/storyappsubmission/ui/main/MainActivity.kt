@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.view.main
+package com.alicea.storyappsubmission.ui.main
 
 import android.content.Context
 import android.content.Intent
@@ -7,7 +7,6 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -16,22 +15,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alicea.storyappsubmission.R
-import com.alicea.storyappsubmission.adapter.ListStoryAdapter
+import com.alicea.storyappsubmission.adapter.LoadingStateAdapter
+import com.alicea.storyappsubmission.adapter.StoryListAdapter
 import com.alicea.storyappsubmission.databinding.ActivityMainBinding
-import com.alicea.storyappsubmission.model.StoryModel
-import com.alicea.storyappsubmission.model.UserPreference
-import com.alicea.storyappsubmission.view.ViewModelFactory
-import com.alicea.storyappsubmission.view.add.AddStoryActivity
-import com.alicea.storyappsubmission.view.welcome.WelcomeActivity
+import com.alicea.storyappsubmission.preference.UserPreference
+import com.alicea.storyappsubmission.ui.ViewModelFactory
+import com.alicea.storyappsubmission.ui.add.AddStoryActivity
+import com.alicea.storyappsubmission.ui.map.MapsActivity
+import com.alicea.storyappsubmission.ui.welcome.WelcomeActivity
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mainViewModel : MainViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var rvStory: RecyclerView
-    private val list = ArrayList<StoryModel>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,54 +45,19 @@ class MainActivity : AppCompatActivity() {
         rvStory = binding.rvListStory
         rvStory.setHasFixedSize(true)
         supportActionBar?.title = getString(R.string.list_stories)
+        rvStory.scrollToPosition(0)
     }
 
 
     private fun setupViewModel() {
         mainViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            ViewModelFactory(UserPreference.getInstance(dataStore), this)
         )[MainViewModel::class.java]
 
-        mainViewModel.storyList.observe(this) {
-            list.clear()
-            for (story in it) {
-                list.add(
-                    StoryModel(
-                        story.id,
-                        story.name,
-                        story.description,
-                        story.photoUrl,
-                        story.createdAt
-                    )
-                )
-            }
-            rvStory.layoutManager = LinearLayoutManager(this)
-
-            val listStoryAdapter = ListStoryAdapter(list)
-            rvStory.adapter = listStoryAdapter
-        }
-
-        mainViewModel.loading.observe(this) {
-            showLoading(it)
-        }
-
-        mainViewModel.errorMessage.observe(this) {
-            when (it) {
-                "Stories fetched successfully" -> {
-                    Toast.makeText(this@MainActivity, getString(R.string.fetched_success), Toast.LENGTH_SHORT).show()
-                }
-                "onFailure" -> {
-                    Toast.makeText(this@MainActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    Toast.makeText(this@MainActivity, getString(R.string.not_found), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
         mainViewModel.getToken().observe(this) { session ->
             if (session.isLogin) {
-                mainViewModel.setData(session.token)
+                getData(session.token)
 
             } else {
                 startActivity(Intent(this, WelcomeActivity::class.java))
@@ -102,14 +65,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
     }
 
     private fun setupAction() {
@@ -121,9 +76,8 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(0, 0)
             swipeRefresh.isRefreshing = false
         }
-        binding.ivAddStory.setOnClickListener {
-            startActivity(Intent(this, AddStoryActivity::class.java))
-        }
+        binding.ivAddStory.setOnClickListener(this)
+        binding.ivMapActivity.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -148,5 +102,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getData(token: String) {
+        rvStory.layoutManager = LinearLayoutManager(this)
 
+        val adapter = StoryListAdapter()
+
+        binding.rvListStory.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LoadingStateAdapter{
+                adapter.retry()
+            },
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+
+        mainViewModel.story(token).observe(this) {
+            adapter.submitData(lifecycle, it)
+        }
+    }
+
+    override fun onClick(p0: View) {
+        when (p0.id) {
+            R.id.iv_add_story -> startActivity(Intent(this, AddStoryActivity::class.java))
+            R.id.iv_map_activity -> {
+                startActivity(Intent(this, MapsActivity::class.java))
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }
