@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.view.login
+package com.alicea.storyappsubmission.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -13,11 +13,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.alicea.storyappsubmission.R
+import com.alicea.storyappsubmission.data.Result
 import com.alicea.storyappsubmission.databinding.ActivityLoginBinding
-import com.alicea.storyappsubmission.isValidEmail
-import com.alicea.storyappsubmission.model.UserPreference
-import com.alicea.storyappsubmission.view.ViewModelFactory
-import com.alicea.storyappsubmission.view.main.MainActivity
+import com.alicea.storyappsubmission.preference.UserPreference
+import com.alicea.storyappsubmission.ui.ViewModelFactory
+import com.alicea.storyappsubmission.ui.main.MainActivity
+import com.alicea.storyappsubmission.utils.EmailValidator.isValidEmail
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -44,26 +45,8 @@ class LoginActivity : AppCompatActivity() {
     private fun setupViewModel() {
         loginViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            ViewModelFactory(UserPreference.getInstance(dataStore), this)
         )[LoginViewModel::class.java]
-
-        loginViewModel.errorMessage.observe(this) {
-            when (it) {
-                "success" -> {
-                    Toast.makeText(this@LoginActivity, getString(R.string.login_message), Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                }
-                "onFailure" -> {
-                    Toast.makeText(this@LoginActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    Toast.makeText(this@LoginActivity, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
         loginViewModel.loading.observe(this) {
             showLoading(it)
@@ -92,7 +75,31 @@ class LoginActivity : AppCompatActivity() {
                     binding.edLoginPassword.setError(getString(R.string.password_length_error), null)
                 }
                 else -> {
-                    loginViewModel.login(email, password)
+                    loginViewModel.loginRepo(email, password).observe(this) {
+                        result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {}
+                                is Result.Success -> {
+                                    Toast.makeText(this@LoginActivity, getString(R.string.login_message), Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                is Result.Error -> {
+                                    when(result.error) {
+                                        "Unable to resolve host \"story-api.dicoding.dev\": No address associated with hostname" -> {
+                                            Toast.makeText(this@LoginActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
+                                        }
+                                        else -> {
+                                            Toast.makeText(this@LoginActivity, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

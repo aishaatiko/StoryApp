@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.view.signup
+package com.alicea.storyappsubmission.ui.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -7,19 +7,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.alicea.storyappsubmission.R
+import com.alicea.storyappsubmission.data.Result
 import com.alicea.storyappsubmission.databinding.ActivitySignupBinding
-import com.alicea.storyappsubmission.isValidEmail
-import com.alicea.storyappsubmission.model.UserModel
-import com.alicea.storyappsubmission.model.UserPreference
-import com.alicea.storyappsubmission.view.ViewModelFactory
-import com.alicea.storyappsubmission.view.login.LoginActivity
+import com.alicea.storyappsubmission.preference.UserModel
+import com.alicea.storyappsubmission.preference.UserPreference
+import com.alicea.storyappsubmission.ui.ViewModelFactory
+import com.alicea.storyappsubmission.ui.welcome.WelcomeActivity
+import com.alicea.storyappsubmission.utils.EmailValidator.isValidEmail
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -46,33 +46,8 @@ class SignupActivity : AppCompatActivity() {
     private fun setupViewModel() {
         signupViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            ViewModelFactory(UserPreference.getInstance(dataStore), this)
         )[SignupViewModel::class.java]
-
-        signupViewModel.errorMessage.observe(this) {
-            when (it) {
-                "User created" -> {
-                    AlertDialog.Builder(this).apply {
-                        setTitle(getString(R.string.title_popup))
-                        setMessage(getString(R.string.signup_message_popup))
-                        setPositiveButton(getString(R.string.next_button_popup)) { _, _ ->
-                            val intent = Intent(this@SignupActivity, LoginActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                        create()
-                        show()
-                    }
-                }
-                "onFailure" -> {
-                    Toast.makeText(this@SignupActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    binding.emailEditTextLayout.error = getString(R.string.email_taken_error)
-                }
-            }
-        }
 
         signupViewModel.loading.observe(this) {
             showLoading(it)
@@ -104,7 +79,30 @@ class SignupActivity : AppCompatActivity() {
                     binding.edRegisterPassword.setError(getString(R.string.password_length_error), null)
                 }
                 else -> {
-                    signupViewModel.registerUser(UserModel(name, email, password))
+                    signupViewModel.registerRepo(UserModel(name, email, password)).observe(this) {
+                        result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {}
+                                is Result.Success -> {
+                                    Toast.makeText(this@SignupActivity, getString(R.string.signup_message_popup), Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this@SignupActivity, WelcomeActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                }
+                                is Result.Error -> {
+                                    when(result.error) {
+                                        "Unable to resolve host \"story-api.dicoding.dev\": No address associated with hostname" -> {
+                                            Toast.makeText(this@SignupActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
+                                        }
+                                        else -> {
+                                            binding.emailEditTextLayout.error = getString(R.string.email_taken_error)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

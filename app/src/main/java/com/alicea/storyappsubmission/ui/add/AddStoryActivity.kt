@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.view.add
+package com.alicea.storyappsubmission.ui.add
 
 import android.Manifest
 import android.content.Context
@@ -21,12 +21,17 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.alicea.storyappsubmission.*
 import com.alicea.storyappsubmission.customview.ButtonAdd
+import com.alicea.storyappsubmission.data.Result
 import com.alicea.storyappsubmission.databinding.ActivityAddStoryBinding
-import com.alicea.storyappsubmission.model.UserPreference
-import com.alicea.storyappsubmission.view.ViewModelFactory
-import com.alicea.storyappsubmission.view.camera.CameraActivity
-import com.alicea.storyappsubmission.view.main.MainActivity
-import com.alicea.storyappsubmission.view.welcome.WelcomeActivity
+import com.alicea.storyappsubmission.preference.UserPreference
+import com.alicea.storyappsubmission.ui.ViewModelFactory
+import com.alicea.storyappsubmission.ui.camera.CameraActivity
+import com.alicea.storyappsubmission.ui.main.MainActivity
+import com.alicea.storyappsubmission.ui.welcome.WelcomeActivity
+import com.alicea.storyappsubmission.utils.FileUtil.compressQuality
+import com.alicea.storyappsubmission.utils.FileUtil.reduceFileImage
+import com.alicea.storyappsubmission.utils.FileUtil.rotateBitmap
+import com.alicea.storyappsubmission.utils.FileUtil.uriToFile
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -44,7 +49,6 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var token: String
 
     private lateinit var buttonAdd: ButtonAdd
-
 
     companion object {
         const val CAMERA_X_RESULT = 200
@@ -114,20 +118,38 @@ class AddStoryActivity : AppCompatActivity() {
                     file.name,
                     requestImageFile
                 )
-                addViewModel.uploadImage(imageMultipart, description, token)
-
+                addViewModel.uploadImageRepo(imageMultipart, description, token).observe(this) {
+                        result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {}
+                            is Result.Success -> {
+                                Toast.makeText(this@AddStoryActivity, getString(R.string.story_created), Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                            is Result.Error -> {
+                                when(result.error) {
+                                    "Unable to resolve host \"story-api.dicoding.dev\": No address associated with hostname" -> {
+                                        Toast.makeText(this@AddStoryActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
+                                    }
+                                    else -> {
+                                        Toast.makeText(this@AddStoryActivity, getString(R.string.fail_to_img), Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             } else {
                 Toast.makeText(this@AddStoryActivity, getString(R.string.input_image_file_first), Toast.LENGTH_SHORT).show()
             }
-
-
         }
     }
 
     private fun setupViewModel() {
         addViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
+            ViewModelFactory(UserPreference.getInstance(dataStore), this)
         )[AddViewModel::class.java]
 
         addViewModel.getToken().observe(this) { session ->
@@ -141,20 +163,6 @@ class AddStoryActivity : AppCompatActivity() {
 
         addViewModel.loading.observe(this) {
             showLoading(it)
-        }
-
-        addViewModel.errorMessage.observe(this) {
-            when (it) {
-                "Story created successfully" -> {
-                    Toast.makeText(this@AddStoryActivity, getString(R.string.story_created), Toast.LENGTH_SHORT).show()
-                }
-                "onFailure" -> {
-                    Toast.makeText(this@AddStoryActivity, getString(R.string.on_failure_message), Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    Toast.makeText(this@AddStoryActivity, getString(R.string.fail_to_img), Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 
@@ -172,6 +180,7 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private var getFile: File? = null
+    @Suppress("DEPRECATION")
     private val launcherIntentCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -183,9 +192,10 @@ class AddStoryActivity : AppCompatActivity() {
             val result = rotateBitmap(
                 BitmapFactory.decodeFile(getFile?.path),
                 isBackCamera
-            )
+            ).apply {
 
-            result.compress(Bitmap.CompressFormat.JPEG, compressQuality(myFile), FileOutputStream(getFile))
+                compress(Bitmap.CompressFormat.JPEG, compressQuality(myFile), FileOutputStream(getFile))
+            }
 
             binding.previewImageView.setImageBitmap(result)
         }
@@ -198,7 +208,7 @@ class AddStoryActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
             val myFile = uriToFile(selectedImg, this@AddStoryActivity)
-            getFile = reduceRotateFileImage(myFile)
+            getFile = reduceFileImage(myFile)
 
             binding.previewImageView.setImageURI(selectedImg)
         }
@@ -212,7 +222,6 @@ class AddStoryActivity : AppCompatActivity() {
             val i = Intent(this, MainActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            finish()
         }
     }
 
@@ -220,4 +229,5 @@ class AddStoryActivity : AppCompatActivity() {
         val result = binding.edAddDescription.text
         buttonAdd.isEnabled = result != null && result.toString().isNotEmpty()
     }
+
 }
