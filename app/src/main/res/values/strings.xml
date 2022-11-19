@@ -15,7 +15,7 @@
     <string name="email_empty_error">Type your Email</string>
     <string name="name_empty_error">Type your Name</string>
     <string name="password_empty_error">Type your Password</string>
-    <string name="signup_message_popup">Account has been created! Start login to add your own story.</string>
+    <string name="signup_message_popup">Account has been created! </string>
     <string name="next_button_popup">Next</string>
     <string name="title_popup" translatable="false">Yeah!</string>
     <string name="wrong_email_password">Wrong email or password</string>
@@ -55,5 +55,18 @@
     <string name="image_logo_story">Story Logo Image</string>
     <string name="add_story_button">Add Story Button</string>
     <string name="story_photo_item_in_list">Story photo item in list</string>
+    <string name="timeout">Timeout</string>
+    <string name="retry">Retry</string>
+    <string name="go_to_map_activity_button">Go to Map Activity</string>
+    <string name="title_activity_maps" translatable="false">MapsActivity</string>
+
+    <string name="normal_type" translatable="false">Normal</string>
+    <string name="satellite_type" translatable="false">Satellite</string>
+    <string name="terrain_type" translatable="false">Terrain</string>
+    <string name="hybrid_type" translatable="false">Hybrid</string>
+    <string name="maps" translatable="false">Maps</string>
+    <string name="title_activity_add_location" translatable="false">AddLocationActivity</string>
+    <string name="load_map">LoadMap</string>
+    <string name="map_style_failed">Style parsing failed</string>
 
 </resources>

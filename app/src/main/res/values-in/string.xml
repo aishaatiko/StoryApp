@@ -13,7 +13,7 @@
     <string name="email_empty_error">Ketikkan Email Anda</string>
     <string name="name_empty_error">Ketikkan Nama Anda</string>
     <string name="password_empty_error">Ketikkan Kata Sandi</string>
-    <string name="signup_message_popup">Akun berhasil dibuat! Mulai masuk untuk menambahkan story.</string>
+    <string name="signup_message_popup">Akun berhasil dibuat! </string>
     <string name="next_button_popup">Lanjut</string>
     <string name="wrong_email_password">Email atau Kata sandi salah</string>
     <string name="login_message">Berhasil Masuk!</string>
@@ -51,4 +51,9 @@
     <string name="image_logo_story">Gambar logo story</string>
     <string name="add_story_button">Tombol menambah story</string>
     <string name="story_photo_item_in_list">Gambar item story dalam daftar</string>
+    <string name="timeout">Waktu habis</string>
+    <string name="retry">Coba lagi</string>
+    <string name="go_to_map_activity_button">Membuka Tampilan Map Story</string>
+    <string name="load_map">Memuat Map</string>
+    <string name="map_style_failed">Gagal memuat style map</string>
 </resources>
