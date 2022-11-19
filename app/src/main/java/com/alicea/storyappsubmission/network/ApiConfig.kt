@@ -1,4 +1,4 @@
-package com.alicea.storyappsubmission.networking
+package com.alicea.storyappsubmission.network
 
 import com.alicea.storyappsubmission.BuildConfig
 import okhttp3.OkHttpClient
